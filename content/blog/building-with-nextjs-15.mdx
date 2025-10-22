@@ -1,0 +1,114 @@
+---
+title: "Building DeepFabric with Next.js 15"
+date: "2025-01-20"
+author: "Tech Navigator"
+description: "A deep dive into how we built DeepFabric using Next.js 15's latest features, including App Router, static exports, and more."
+tags: ["nextjs", "tutorial", "web-development"]
+---
+
+# Building DeepFabric with Next.js 15
+
+Next.js 15 brings incredible improvements to static site generation, and we've leveraged them to create the DeepFabric experience.
+
+## Why Next.js 15?
+
+Next.js 15 offers several key features that make it perfect for our arcade-themed site:
+
+- **App Router**: Modern routing with server components
+- **Static Export**: Deploy anywhere with zero runtime dependencies
+- **Turbopack**: Blazing-fast development builds
+- **Image Optimization**: Perfect for our spaceman characters
+
+## Project Structure
+
+Here's how we organized our DeepFabric project:
+
+```bash
+deepfabric-site/
+├── app/
+│   ├── layout.tsx          # Main layout with StarField
+│   ├── page.tsx            # Homepage
+│   ├── blog/               # Blog pages
+│   ├── about/              # About page
+│   └── docs/               # Documentation
+├── components/
+│   ├── ArcadeButton.tsx    # Neon button component
+│   ├── ArcadeCard.tsx      # Glowing card component
+│   ├── StarField.tsx       # Animated background
+│   └── SpacemanFloat.tsx   # Floating spaceman
+├── content/
+│   └── blog/               # MDX blog posts
+└── spaceman/               # Spaceman character images
+```
+
+## Static Export Configuration
+
+To enable static export, we configured `next.config.ts`:
+
+```typescript
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+};
+
+export default nextConfig;
+```
+
+This generates a fully static site that can be deployed to any static hosting service.
+
+## Tailwind CSS Theme
+
+Our neon/cyberpunk theme is built with custom Tailwind configuration:
+
+```javascript
+// tailwind.config.ts
+colors: {
+  'neon-pink': '#FF006E',
+  'neon-purple': '#8338EC',
+  'neon-cyan': '#06FFF0',
+  'neon-blue': '#3A86FF',
+  'space-dark': '#0A0E27',
+}
+```
+
+## MDX Blog System
+
+We implemented a custom MDX blog system with:
+
+- **gray-matter** for frontmatter parsing
+- **react-markdown** for rendering
+- **Custom code blocks** with syntax highlighting
+
+```typescript
+// lib/blog.ts
+export function getAllPosts(): BlogPost[] {
+  const fileNames = fs.readdirSync(postsDirectory);
+  return fileNames
+    .filter((fileName) => fileName.endsWith('.mdx'))
+    .map(parsePost)
+    .sort((a, b) => (a.date > b.date ? -1 : 1));
+}
+```
+
+## Performance Considerations
+
+We optimized for performance by:
+
+1. **Static generation** of all pages at build time
+2. **Code splitting** with dynamic imports
+3. **Image optimization** for spaceman assets
+4. **CSS optimization** with Tailwind's purge feature
+
+## What's Next?
+
+In future posts, we'll dive deeper into:
+
+- Creating custom animations with CSS and Canvas
+- Building accessible arcade-themed components
+- Deploying to various platforms
+
+Stay tuned, space travelers!
