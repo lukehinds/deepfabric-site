@@ -18,7 +18,7 @@ export default function BlogPage() {
           </div>
           <SectionTitle>Blog</SectionTitle>
           <p className="text-xl text-gray-300">
-            Cosmic tales from the DeepFabric universe
+            DeepFabric updates, tutorials, and insights from the world of micro agent training.
           </p>
         </div>
 

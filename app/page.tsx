@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TerminalWindow from '@/components/TerminalWindow';
 import TerminalPrompt from '@/components/TerminalPrompt';
+import TutorialMode from '@/components/TutorialMode';
 
 interface CommandOutput {
   command: string;
@@ -16,6 +17,8 @@ export default function Home() {
   const [history, setHistory] = useState<CommandOutput[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [tutorialMode, setTutorialMode] = useState(false);
+  const [whoamiCount, setWhoamiCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalOutputRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -45,6 +48,7 @@ export default function Home() {
             <div className="text-term-yellow mb-2">Available commands:</div>
             <div className="ml-4 space-y-1">
               <div><span className="text-term-green">help</span> - Show this help message</div>
+              <div><span className="text-term-green">tutorial</span> - Start interactive DeepFabric tutorial</div>
               <div><span className="text-term-green">ls</span> - List all pages</div>
               <div><span className="text-term-green">install</span> - Show installation guide</div>
               <div><span className="text-term-green">docs</span> - Navigate to documentation</div>
@@ -58,6 +62,10 @@ export default function Home() {
           </div>
         );
         break;
+
+      case 'tutorial':
+        setTutorialMode(true);
+        return;
 
       case 'ls':
       case 'ls -la':
@@ -88,7 +96,7 @@ export default function Home() {
           <div className="space-y-2">
             <div className="text-term-yellow">Installation Guide:</div>
             <div className="bg-terminal-bg-light border border-terminal-border rounded p-4 mt-2">
-              <div className="text-term-green">$ npm install deepfabric</div>
+              <div className="text-term-green">$ pip install deepfabric</div>
               <div className="text-terminal-fg text-sm mt-2">
                 <div className="flex items-center gap-2">
                   <span className="text-term-cyan">⠋</span>
@@ -96,12 +104,6 @@ export default function Home() {
                 </div>
                 <div className="text-term-green">✓ Installation complete!</div>
               </div>
-            </div>
-            <div className="text-terminal-fg text-sm mt-2">
-              Then import in your code:
-            </div>
-            <div className="bg-terminal-bg-light border border-terminal-border rounded p-3 mt-1 font-mono text-sm">
-              <div className="text-term-purple">import</div> <div className="text-term-cyan inline">&#123; DeepFabric &#125;</div> <div className="text-term-purple inline">from</div> <div className="text-term-yellow inline">'deepfabric'</div>;
             </div>
           </div>
         );
@@ -133,7 +135,16 @@ export default function Home() {
         return;
 
       case 'whoami':
-        output = <div className="text-term-green">user@deepfabric</div>;
+        const currentCount = whoamiCount;
+        setWhoamiCount(prev => prev + 1);
+
+        if (currentCount === 0) {
+          output = <div className="text-term-green">ronnniepickering</div>;
+        } else if (currentCount === 1) {
+          output = <div className="text-term-green">ronnniepickering!!!</div>;
+        } else {
+          output = <div className="text-term-green font-bold">RONNIEPICKERING!!!!</div>;
+        }
         break;
 
       case 'date':
@@ -206,54 +217,60 @@ export default function Home() {
   }, [history]);
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
-      <TerminalWindow ref={terminalOutputRef} title="deepfabric@terminal:~">
-        {/* ASCII Art Logo */}
-        <div className="ascii-art text-term-cyan mb-8">
-          {asciiArt}
-        </div>
-
-        {/* Welcome Message */}
-        <div className="space-y-2 mb-8">
-          <div>
-            <span className="text-term-green">DeepFabric</span>
-            <span className="text-terminal-fg"> - A micro agent training pipeline</span>
-          </div>
-          <div className="text-term-yellow">Version 1.0.0-beta</div>
-          <div className="text-terminal-fg">Type <span className="text-term-cyan">'help'</span> for available commands</div>
-        </div>
-
-        {/* Command History Output */}
-        {history.map((item, index) => (
-          <div key={index} className="mb-4">
-            <div className="mb-2">
-              <TerminalPrompt />
-              <span className="terminal-command">{item.command}</span>
+    <div className="overflow-hidden flex items-center justify-center px-4 md:px-8" style={{ height: 'calc(100vh - 4rem)' }}>
+      <TerminalWindow ref={terminalOutputRef} title={tutorialMode ? "deepfabric@tutorial:~" : "deepfabric@terminal:~"}>
+        {tutorialMode ? (
+          <TutorialMode onExit={() => setTutorialMode(false)} />
+        ) : (
+          <>
+            {/* ASCII Art Logo */}
+            <div className="ascii-art text-term-cyan mb-8">
+              {asciiArt}
             </div>
-            <div className="ml-4">{item.output}</div>
-          </div>
-        ))}
 
-        {/* Interactive Command Line */}
-        <div className="flex items-center border-t-2 border-terminal-border pt-4 mt-6">
-          <TerminalPrompt />
-          <input
-            ref={inputRef}
-            type="text"
-            value={command}
-            onChange={(e) => setCommand(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green ml-2"
-            placeholder="Type a command..."
-          />
-          <span className="cursor"></span>
-        </div>
+            {/* Welcome Message */}
+            <div className="space-y-2 mb-8">
+              <div>
+                <span className="text-term-green">DeepFabric</span>
+                <span className="text-terminal-fg"> - A micro agent training pipeline</span>
+              </div>
+              <div className="text-term-yellow">Version 1.0.0-beta</div>
+              <div className="text-terminal-fg">Type <span className="text-term-cyan">'help'</span> for available commands</div>
+            </div>
 
-        {/* Footer hints */}
-        <div className="mt-6 text-xs text-terminal-fg opacity-60">
-          <div>💡 Tip: Type 'help' to see all commands</div>
-          <div>⌨️  Use ↑/↓ arrows for command history</div>
-        </div>
+            {/* Command History Output */}
+            {history.map((item, index) => (
+              <div key={index} className="mb-4">
+                <div className="mb-2">
+                  <TerminalPrompt />
+                  <span className="terminal-command">{item.command}</span>
+                </div>
+                <div className="ml-4">{item.output}</div>
+              </div>
+            ))}
+
+            {/* Interactive Command Line */}
+            <div className="flex items-center border-t-2 border-terminal-border pt-4 mt-6">
+              <TerminalPrompt />
+              <input
+                ref={inputRef}
+                type="text"
+                value={command}
+                onChange={(e) => setCommand(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green ml-2"
+                placeholder="Type a command..."
+              />
+            </div>
+
+            {/* Footer hints */}
+            <div className="mt-6 text-xs text-terminal-fg opacity-60">
+              <div>💡 Tip: Type 'help' to see all commands</div>
+              <div>⌨️  Use ↑/↓ arrows for command history</div>
+              <div>🎓 Try: Type 'tutorial' for an interactive guide</div>
+            </div>
+          </>
+        )}
       </TerminalWindow>
     </div>
   );

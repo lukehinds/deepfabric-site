@@ -6,8 +6,9 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply bg-terminal-bg text-terminal-fg font-mono;
+    height: 100vh;
   }
 }
 
@@ -108,6 +109,105 @@
     border-right: 8px solid transparent;
     border-top: 8px solid theme('colors.term-cyan');
     transform: translateY(100%);
+  }
+
+  /* Tutorial styles */
+  .tutorial-progress-bar {
+    @apply w-full bg-terminal-bg-light rounded-full h-2;
+  }
+
+  .tutorial-progress-fill {
+    @apply bg-term-green h-2 rounded-full transition-all duration-500 ease-out;
+  }
+
+  .tutorial-step-indicator {
+    @apply w-2 h-2 rounded-full transition-all duration-300;
+  }
+
+  .tutorial-step-completed {
+    @apply bg-term-green;
+  }
+
+  .tutorial-step-current {
+    @apply bg-term-cyan animate-pulse;
+  }
+
+  .tutorial-step-pending {
+    @apply bg-terminal-border;
+  }
+
+  /* Tutorial button styles */
+  .tutorial-btn-primary {
+    @apply px-4 py-2 bg-term-green text-terminal-bg rounded font-bold;
+    @apply hover:bg-term-cyan transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-term-cyan;
+  }
+
+  .tutorial-btn-secondary {
+    @apply px-4 py-2 border border-terminal-border rounded;
+    @apply hover:border-term-cyan transition-colors duration-200;
+    @apply text-term-cyan text-sm;
+  }
+
+  /* Animation for tutorial content */
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Code block styling */
+  .code-block pre {
+    @apply p-4 m-0 overflow-x-auto;
+  }
+
+  .code-block code {
+    @apply font-mono text-sm;
+  }
+
+  /* Shiki syntax highlighting overrides */
+  .code-block .shiki {
+    background-color: #0d1117 !important;
   }
 }
 

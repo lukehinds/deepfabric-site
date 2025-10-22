@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SpacemanAssistant from "@/components/SpacemanAssistant";
 import TerminalNav from "@/components/TerminalNav";
 
 export const metadata: Metadata = {
@@ -28,9 +27,6 @@ export default function RootLayout({
         <main className="relative z-10 min-h-screen pt-16">
           {children}
         </main>
-
-        {/* Spaceman Assistant */}
-        <SpacemanAssistant />
       </body>
     </html>
   );

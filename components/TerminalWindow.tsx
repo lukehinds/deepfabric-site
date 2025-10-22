@@ -10,7 +10,7 @@ interface TerminalWindowProps {
 const TerminalWindow = forwardRef<HTMLDivElement, TerminalWindowProps>(
   ({ children, title = "deepfabric@terminal" }, ref) => {
     return (
-      <div className="terminal-window w-full max-w-5xl mx-auto">
+      <div className="terminal-window w-full max-w-6xl mx-auto">
         {/* Terminal header with dots */}
         <div className="terminal-header">
           <div className="terminal-dot bg-term-red" />
@@ -19,10 +19,11 @@ const TerminalWindow = forwardRef<HTMLDivElement, TerminalWindowProps>(
           <span className="text-terminal-fg text-sm ml-4">{title}</span>
         </div>
 
-        {/* Terminal content with scrolling */}
+        {/* Terminal content */}
         <div
           ref={ref}
-          className="p-6 max-h-[70vh] overflow-y-auto"
+          className="p-6 overflow-y-auto"
+          style={{ maxHeight: 'calc(100vh - 12rem)' }}
         >
           {children}
         </div>
