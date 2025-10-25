@@ -12,7 +12,7 @@ export default function ArcadeCard({
   const glowClasses = {
     cyan: 'neon-border hover:shadow-neon-cyan',
     pink: 'neon-border-pink hover:shadow-neon-pink',
-    purple: 'border-2 border-neon-purple hover:shadow-neon-purple',
+    purple: 'neon-border-purple hover:shadow-neon-purple',
   };
 
   return (

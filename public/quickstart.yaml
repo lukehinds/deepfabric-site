@@ -1,0 +1,78 @@
+# ============================================================================
+# QUICKSTART CONFIG
+# ============================================================================
+# Purpose: Simple config to get started with DeepFabric
+# Output format: Standard conversations format (most versatile)
+# Usage: deepfabric generate examples/quickstart.yaml
+# ============================================================================
+
+# Define your Agents's purpose
+dataset_system_prompt: |
+  You are an intelligent AI assistant with access to various tools and functions.
+  When presented with a user task or question, you should:
+  1. Analyze what information or actions are needed
+  2. Select the appropriate tool(s) to use from the following options:
+     - get_time: Get current time for a timezone
+     - get_calendar_events: Get upcoming calendar events
+     - send_email: Send an email
+  3. Execute the tool(s) with proper parameters
+  4. Interpret the results and provide a clear answer
+  Always think step-by-step about which tools to use and why.
+
+# Topic generation settings
+topic_tree:
+  topic_prompt: "Scheduling and calendar management AI Agent tasks"
+  provider: "openai"  # or "anthropic", "gemini", "ollama"
+  model: "gpt-4o"
+  temperature: 0.8
+  degree: 2  # Number of subtopics per branch
+  depth: 2  # Tree depth (2-3 is usually enough)
+  save_as: "deepfabric-topic-tree.jsonl"
+
+# Data generation settings
+data_engine:
+  generation_system_prompt: |
+    Generate realistic agent scenarios showing step-by-step reasoning from a scheduling AI assistant.
+
+    Each example should demonstrate clear thinking followed by appropriate tool execution.
+
+    Show reasoning for:
+    - What the user needs
+    - Why a specific tool is chosen
+    - How parameters are determined
+    - What the tool result means
+    Make examples pedagogically valuable for training reasoning skills.
+    available_tools:
+      - get_time: Get current time for a timezone
+      - get_calendar_events: Get upcoming calendar events
+      - send_email: Send an email
+
+  provider: "openai"
+  model: "gpt-4o"
+  temperature: 0.7
+  conversation_type: "agent_cot_multi_turn"
+
+  available_tools: ["get_time", "get_calendar_events", "send_email"]
+  max_tools_per_query: 3
+
+  save_as: "agent_tool_calling.jsonl"
+
+# Dataset configuration
+dataset:
+  creation:
+    num_steps: 4  # Number of generation steps
+    batch_size: 1
+    sys_msg: false
+  save_as: "training-dataset.jsonl"
+  formatters:
+  # Primary formatter for TRL SFTTrainer
+  - name: "trl_sft"
+    template: "builtin://trl_sft_tools"
+    output: "dataset.jsonl"
+    config:
+      include_system_prompt: true
+      # Optional: override system prompt for training
+      # system_prompt_override: "Custom system prompt here..."
+      validate_tool_schemas: true
+      # Keep available_tools for reference, or remove for cleaner output
+      remove_available_tools_field: false

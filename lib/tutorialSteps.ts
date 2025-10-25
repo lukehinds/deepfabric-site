@@ -16,6 +16,7 @@ export interface TutorialStep {
   mockOutput: string | ((onComplete: () => void) => AnimatedOutput);
   autoAdvanceDelay?: number; // ms to auto-advance if no command needed
   allowSkip?: boolean;
+  hasDownloadableFile?: string; // filename to download
 }
 
 export const tutorialSteps: TutorialStep[] = [
@@ -26,14 +27,16 @@ export const tutorialSteps: TutorialStep[] = [
     mockOutput: `
 🚀 Welcome to the DeepFabric Interactive Tutorial!
 
-DeepFabric is a specialized dataset generation framework for training
-small language models (SLMs) to become capable agents.
+DeepFabric is a specialized framework for training small language models (SLMs)
+to become efficient, capable Agents
 
 In this tutorial, you'll learn:
+  ✓ How to install DeepFabric
   ✓ How to generate datasets with the CLI
   ✓ Using configuration files for complex setups
   ✓ Different generation modes and use cases
   ✓ Uploading datasets to Hugging Face Hub
+  ✓ Fine-tuning models with PEFT/LoRA
 
 Press 'Next Step' or type 'continue' to begin!
     `,
@@ -41,29 +44,67 @@ Press 'Next Step' or type 'continue' to begin!
     commandPlaceholder: "Type 'continue' or click Next Step...",
     allowSkip: false,
   },
-
   {
     id: 2,
-    title: "Basic Generation",
-    description: "Generate your first dataset using the CLI.",
-    expectedCommand: "deepfabric generate --mode tree --provider openai --model gpt-4o-mini --topic-prompt \"Python programming\" --depth 2 --degree 2 --num-steps 4 --dataset-save-as dataset.jsonl",
-    commandPlaceholder: "deepfabric generate --mode tree --provider openai --model gpt-4o-mini ...",
+    title: "Installation",
+    description: "Install DeepFabric using pip.",
+    expectedCommand: "pip install deepfabric",
+    commandPlaceholder: "pip install deepfabric",
     mockOutput: (onComplete: () => void) => {
-      // This will be a component that shows animated progress
       return {
         type: 'animated',
         steps: [
-          { delay: 500, content: "🔧 Initializing DeepFabric..." },
-          { delay: 1000, content: "🌲 Generating topic tree (depth=2, degree=2)..." },
-          { delay: 1500, content: "  ├─ Python Basics\n  │  ├─ Variables and Data Types\n  │  └─ Control Flow\n  └─ Python Advanced\n     ├─ Object-Oriented Programming\n     └─ Decorators and Context Managers" },
-          { delay: 1000, content: "✓ Topic tree complete (4 topics generated)" },
-          { delay: 800, content: "\n📝 Generating dataset entries..." },
-          { delay: 1200, content: "  [1/4] Variables and Data Types... ✓" },
-          { delay: 1200, content: "  [2/4] Control Flow... ✓" },
-          { delay: 1200, content: "  [3/4] Object-Oriented Programming... ✓" },
-          { delay: 1200, content: "  [4/4] Decorators and Context Managers... ✓" },
-          { delay: 800, content: "\n💾 Saving dataset to dataset.jsonl..." },
-          { delay: 500, content: "✓ Dataset saved successfully (4 entries, 2.3 KB)" },
+          { delay: 500, content: "Collecting deepfabric" },
+          { delay: 800, content: "  Downloading deepfabric-0.1.0-py3-none-any.whl (45 kB)" },
+          { delay: 600, content: "Collecting pydantic>=2.0.0" },
+          { delay: 400, content: "  Using cached pydantic-2.5.0-py3-none-any.whl (380 kB)" },
+          { delay: 600, content: "Collecting openai>=1.0.0" },
+          { delay: 400, content: "  Using cached openai-1.6.1-py3-none-any.whl (225 kB)" },
+          { delay: 600, content: "Collecting anthropic>=0.8.0" },
+          { delay: 400, content: "  Using cached anthropic-0.8.1-py3-none-any.whl (120 kB)" },
+          { delay: 500, content: "Installing collected packages: pydantic, openai, anthropic, deepfabric" },
+          { delay: 800, content: "✓ Successfully installed deepfabric-0.1.0" },
+          { delay: 300, content: "\n🎉 DeepFabric is ready to use!", callback: onComplete },
+        ]
+      };
+    },
+    allowSkip: true,
+  },
+  {
+    id: 3,
+    title: "Basic Generation",
+    description: "Generate your first dataset using a configuration file. Download quickstart.yaml to get started.",
+    expectedCommand: "deepfabric generate quickstart.yaml",
+    commandPlaceholder: "deepfabric generate quickstart.yaml",
+    hasDownloadableFile: "quickstart.yaml",
+    mockOutput: (onComplete: () => void) => {
+      return {
+        type: 'animated',
+        steps: [
+          { delay: 500, content: "metrics user_id: 8711dff2-f5b8-4595-a865-7e224a7e001b" },
+          { delay: 300, content: "✓ Path Validation Passed" },
+          { delay: 400, content: "• Expected tree paths: 4 (depth=2, degree=2)" },
+          { delay: 300, content: "• Requested samples: 4 (4 steps × 1 batch size)" },
+          { delay: 300, content: "• Path utilization: ~100.0%" },
+          { delay: 800, content: "\n╭─────────────────────────────────────────────────────────────╮\n│ DeepFabric Tree Generation                                 │\n│ Building hierarchical topic structure with gpt-4o          │\n╰─────────────────────────────────────────────────────────────╯" },
+          { delay: 500, content: "\nConfiguration: depth=2, degree=2" },
+          { delay: 1000, content: "\n🌲 Building topic tree (depth 1/2) 0:00:01" },
+          { delay: 1500, content: "\nTree building completed successfully" },
+          { delay: 400, content: "Generated 4 total paths" },
+          { delay: 400, content: "Topic tree saved to deepfabric-topic-tree.jsonl" },
+          { delay: 300, content: "Total paths: 4" },
+          { delay: 800, content: "\n╭─────────────────────────────────────────────────────────────╮\n│ DeepFabric Dataset Generation                               │\n│ Creating synthetic training data with gpt-4o               │\n╰─────────────────────────────────────────────────────────────╯" },
+          { delay: 500, content: "\n─────────────────────── Generation Parameters ───────────────────────" },
+          { delay: 300, content: "Model:          gpt-4o" },
+          { delay: 300, content: "Steps:          4" },
+          { delay: 300, content: "Batch Size:     1" },
+          { delay: 300, content: "Total Samples:  4" },
+          { delay: 1000, content: "\n📝 Generating dataset samples ████████████████████ 4/4 • 4/4 0:01:00 0:00:00" },
+          { delay: 800, content: "\nSuccessfully generated 4 samples" },
+          { delay: 400, content: "Dataset saved to: training-dataset.jsonl" },
+          { delay: 600, content: "\nApplying formatters..." },
+          { delay: 800, content: "Formatted dataset saved to dataset.jsonl using trl_sft formatter" },
+          { delay: 400, content: "Applied 'trl_sft' formatter: 4 samples" },
           { delay: 300, content: "\n🎉 Generation complete!", callback: onComplete },
         ]
       };
@@ -72,7 +113,7 @@ Press 'Next Step' or type 'continue' to begin!
   },
 
   {
-    id: 3,
+    id: 4,
     title: "View Generated Dataset",
     description: "Let's examine what was generated.",
     expectedCommand: "cat dataset.jsonl | head -20",
@@ -105,7 +146,7 @@ Press 'Next Step' or type 'continue' to begin!
   },
 
   {
-    id: 4,
+    id: 5,
     title: "Using Configuration Files",
     description: "For complex setups, use YAML configuration files.",
     expectedCommand: "cat config.yaml",
@@ -147,7 +188,7 @@ dataset:
   },
 
   {
-    id: 5,
+    id: 6,
     title: "Generate from Config",
     description: "Run generation using the configuration file.",
     expectedCommand: "deepfabric generate config.yaml",
@@ -174,7 +215,7 @@ dataset:
   },
 
   {
-    id: 6,
+    id: 7,
     title: "Advanced: Tool Calling",
     description: "Generate datasets for training tool-calling agents.",
     expectedCommand: "deepfabric generate --conversation-template tool_calling --topic-prompt \"Python development tools\" --num-steps 3 --dataset-save-as tools_dataset.jsonl",
@@ -195,7 +236,7 @@ dataset:
   },
 
   {
-    id: 7,
+    id: 8,
     title: "View Tool Calling Dataset",
     description: "Examine the generated tool-calling dataset.",
     expectedCommand: "cat tools_dataset.jsonl | head -30",
@@ -248,7 +289,7 @@ dataset:
   },
 
   {
-    id: 8,
+    id: 9,
     title: "Upload to Hugging Face",
     description: "Share your dataset with the community.",
     expectedCommand: "deepfabric upload ml_dataset.jsonl --repo username/ml-fundamentals-dataset --tags machine-learning education",
@@ -273,7 +314,7 @@ dataset:
   },
 
   {
-    id: 9,
+    id: 10,
     title: "Fine-Tune with PEFT/LoRA",
     description: "Train your model efficiently using parameter-efficient methods.",
     expectedCommand: "python train.py --dataset ml_dataset.jsonl --model Qwen/Qwen2.5-0.5B-Instruct --method lora",
@@ -303,7 +344,7 @@ dataset:
   },
 
   {
-    id: 10,
+    id: 11,
     title: "Tutorial Complete!",
     description: "You've learned the essentials of DeepFabric.",
     mockOutput: `

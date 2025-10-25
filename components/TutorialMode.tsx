@@ -121,6 +121,27 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
     }
   };
 
+  const downloadFile = async () => {
+    if (currentStep.hasDownloadableFile) {
+      try {
+        const response = await fetch(`/${currentStep.hasDownloadableFile}`);
+        const content = await response.text();
+        const blob = new Blob([content], { type: 'text/yaml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = currentStep.hasDownloadableFile;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Failed to download file:', error);
+        alert('Failed to download file. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Tutorial Header */}
@@ -186,53 +207,89 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
         )}
       </div>
 
-      {/* Action Buttons */}
-      {stepCompleted && (
-        <div className="flex gap-3 mb-4">
-          <button
-            onClick={nextStep}
-            className="flex-1 bg-term-green text-terminal-bg px-4 py-2 rounded hover:bg-term-cyan transition-colors font-bold"
-          >
-            {isLastStep ? 'Finish Tutorial' : 'Next Step →'}
-          </button>
-          {currentStep.expectedCommand && (
-            <button
-              onClick={copyCommand}
-              className="px-4 py-2 border border-terminal-border rounded hover:border-term-cyan transition-colors text-term-cyan text-sm"
-              title="Copy command"
-            >
-              📋 Copy
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Command Input */}
-      {!stepCompleted && currentStep.expectedCommand && (
+      {/* Command Input / Display */}
+      {currentStep.expectedCommand && (
         <div className="border-t-2 border-terminal-border pt-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-term-green">$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={command}
-              onChange={(e) => setCommand(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green"
-              placeholder={currentStep.commandPlaceholder || 'Type command...'}
-            />
+          {/* Download button for config files - show only when not completed */}
+          {!stepCompleted && currentStep.hasDownloadableFile && (
+            <div className="mb-3">
+              <button
+                onClick={downloadFile}
+                className="w-full px-4 py-2 border-2 border-term-cyan rounded hover:bg-term-cyan hover:text-terminal-bg transition-colors text-term-cyan text-sm font-semibold flex items-center justify-center gap-2"
+              >
+                ⬇️ Download {currentStep.hasDownloadableFile}
+              </button>
+            </div>
+          )}
+
+          {/* Show expected command in a readable format */}
+          <div className="mb-3 p-3 bg-terminal-bg-light rounded border border-terminal-border">
+            <div className="flex items-start gap-2">
+              <span className="text-term-green shrink-0">$</span>
+              <code className="text-term-cyan text-sm break-all whitespace-pre-wrap leading-relaxed">
+                {currentStep.expectedCommand}
+              </code>
+            </div>
           </div>
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={() => handleCommand(currentStep.expectedCommand || '')}
-              className="px-4 py-1 bg-term-cyan text-terminal-bg rounded hover:bg-term-green transition-colors text-sm"
-            >
-              Auto-Complete
-            </button>
-            <span className="text-terminal-fg text-xs flex items-center">
-              Press Tab to auto-fill, Enter to run
-            </span>
-          </div>
+
+          {/* Input area - only show when not completed */}
+          {!stepCompleted && (
+            <>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-term-green">$</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={command}
+                  onChange={(e) => setCommand(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green"
+                  placeholder="Type command or use Tab to auto-fill..."
+                />
+              </div>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => handleCommand(currentStep.expectedCommand || '')}
+                  className="px-4 py-1 bg-term-cyan text-terminal-bg rounded hover:bg-term-green transition-colors text-sm"
+                >
+                  Auto-Complete
+                </button>
+                <span className="text-terminal-fg text-xs flex items-center">
+                  Press Tab to auto-fill, Enter to run
+                </span>
+              </div>
+            </>
+          )}
+
+          {/* Action Buttons - show when completed */}
+          {stepCompleted && (
+            <div className="flex gap-3 mt-3">
+              <button
+                onClick={nextStep}
+                className="flex-1 bg-term-green text-terminal-bg px-4 py-2 rounded hover:bg-term-cyan transition-colors font-bold"
+              >
+                {isLastStep ? 'Finish Tutorial' : 'Next Step →'}
+              </button>
+              {currentStep.hasDownloadableFile && (
+                <button
+                  onClick={downloadFile}
+                  className="px-4 py-2 border border-terminal-border rounded hover:border-term-cyan transition-colors text-term-cyan text-sm"
+                  title="Download config file"
+                >
+                  ⬇️ Download
+                </button>
+              )}
+              {currentStep.expectedCommand && (
+                <button
+                  onClick={copyCommand}
+                  className="px-4 py-2 border border-terminal-border rounded hover:border-term-cyan transition-colors text-term-cyan text-sm"
+                  title="Copy command"
+                >
+                  📋 Copy
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
 
