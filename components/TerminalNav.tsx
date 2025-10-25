@@ -7,11 +7,10 @@ export default function TerminalNav() {
   const pathname = usePathname();
 
   const navItems = [
-    { path: '/', label: 'home' },
-    { path: '/docs', label: 'docs' },
-    { path: '/blog', label: 'blog' },
-    { path: '/about', label: 'about' },
-    { path: '/community', label: 'community' },
+    { path: '/', label: 'home', external: false },
+    { path: 'https://lukehinds.github.io/deepfabric/', label: 'docs', external: true },
+    { path: '/blog', label: 'blog', external: false },
+    { path: 'https://github.com/lukehinds/deepfabric', label: 'community', external: true },
   ];
 
   return (
@@ -31,6 +30,7 @@ export default function TerminalNav() {
                     ? 'text-term-cyan'
                     : 'text-terminal-fg'
                 }`}
+                {...(item.external && { target: '_blank', rel: 'noopener noreferrer' })}
               >
                 {item.label}
               </Link>

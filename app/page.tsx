@@ -84,7 +84,7 @@ export default function Home() {
               <span className="text-terminal-fg text-xs">- About the project</span>
             </div>
             <div className="flex gap-4">
-              <Link href="/community" className="text-term-green hover:text-term-cyan">📄 community.md</Link>
+              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📄 community.md</Link>
               <span className="text-terminal-fg text-xs">- Join our community</span>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function Home() {
         break;
 
       case 'community':
-        setTimeout(() => router.push('/community'), 500);
+        setTimeout(() => router.push('https://github.com/lukehinds/deepfabric'), 500);
         output = <div className="text-term-cyan">Navigating to community...</div>;
         break;
 
@@ -155,7 +155,6 @@ export default function Home() {
         output = (
           <div className="text-term-purple">
             <div>🚀 ✨ 🌟 You found the secret command! 🌟 ✨ 🚀</div>
-            <div className="mt-2 text-term-cyan">The spaceman waves at you! 👋</div>
           </div>
         );
         break;

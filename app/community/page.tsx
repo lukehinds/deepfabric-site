@@ -1,20 +1,13 @@
 import SectionTitle from '@/components/SectionTitle';
 import ArcadeCard from '@/components/ArcadeCard';
 import ArcadeButton from '@/components/ArcadeButton';
-import SpacemanFloat from '@/components/SpacemanFloat';
 
 export default function CommunityPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16 relative">
-          <div className="absolute -top-10 left-0 hidden lg:block">
-            <SpacemanFloat spacemanNumber={3} size={100} />
-          </div>
-          <div className="absolute -top-10 right-0 hidden lg:block">
-            <SpacemanFloat spacemanNumber={4} size={100} />
-          </div>
+        <div className="text-center mb-16">
           <SectionTitle>Community</SectionTitle>
           <p className="text-xl text-gray-300">
             Join our cosmic crew of developers and contributors
@@ -114,7 +107,7 @@ export default function CommunityPage() {
             Connect With Us
           </h3>
           <div className="flex flex-wrap gap-4 justify-center mb-8">
-            <ArcadeButton href="https://github.com" variant="cyan">
+            <ArcadeButton href="https://github.com/lukehinds/deepfabric" variant="cyan">
               GitHub
             </ArcadeButton>
             <ArcadeButton href="https://discord.com" variant="pink">
@@ -123,10 +116,6 @@ export default function CommunityPage() {
             <ArcadeButton href="https://twitter.com" variant="purple">
               Twitter
             </ArcadeButton>
-          </div>
-          <div className="flex justify-center gap-4">
-            <SpacemanFloat spacemanNumber={5} size={80} />
-            <SpacemanFloat spacemanNumber={6} size={80} />
           </div>
         </div>
       </div>
