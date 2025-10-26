@@ -1,5 +1,5 @@
 ---
-title: "OpenEnv: A Standard for Agentic Execution Environments"
+title: "OpenEnv: Agentic Execution Environments"
 date: "2025-10-26"
 excerpt: "OpenEnv is a new open standard and framework for building and sharing secure, isolated execution environments for training AI agents. Developed in collaboration between Meta-PyTorch and Hugging Face, OpenEnv provides a typed HTTP interface, containerized deployment, and a central hub for discovering environments. This article explores the architecture, design principles, and practical considerations of OpenEnv, highlighting how it addresses the fragmentation problem in reinforcement learning infrastructure."
 tags: ["llm", "ai", "reinforcement learning", "infrastructure", "pytorch"]
