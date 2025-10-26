@@ -72,16 +72,19 @@ export default function Home() {
         output = (
           <div className="space-y-1">
             <div className="flex gap-4">
-              <Link href="/docs" className="text-term-blue hover:text-term-cyan">📁 docs/</Link>
+              <Link
+                href="https://lukehinds.github.io/deepfabric/"
+                className="text-term-blue hover:text-term-cyan"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📁 docs/
+              </Link>
               <span className="text-terminal-fg text-xs">- Documentation and guides</span>
             </div>
             <div className="flex gap-4">
               <Link href="/blog" className="text-term-blue hover:text-term-cyan">📁 blog/</Link>
               <span className="text-terminal-fg text-xs">- Articles and updates</span>
-            </div>
-            <div className="flex gap-4">
-              <Link href="/about" className="text-term-green hover:text-term-cyan">📄 about.md</Link>
-              <span className="text-terminal-fg text-xs">- About the project</span>
             </div>
             <div className="flex gap-4">
               <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📄 community.md</Link>
@@ -110,8 +113,8 @@ export default function Home() {
         break;
 
       case 'docs':
-        setTimeout(() => router.push('/docs'), 500);
-        output = <div className="text-term-cyan">Navigating to docs...</div>;
+        setTimeout(() => window.open('https://lukehinds.github.io/deepfabric/', '_blank'), 500);
+        output = <div className="text-term-cyan">Opening docs in new tab...</div>;
         break;
 
       case 'blog':

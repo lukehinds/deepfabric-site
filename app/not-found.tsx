@@ -35,7 +35,12 @@ export default function NotFound() {
                 <span className="text-term-blue">📁</span>
                 <span className="directory">home/</span>
               </Link>
-              <Link href="/docs" className="file-item">
+              <Link
+                href="https://lukehinds.github.io/deepfabric/"
+                className="file-item"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span className="text-term-blue">📁</span>
                 <span className="directory">docs/</span>
               </Link>
