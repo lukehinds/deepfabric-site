@@ -10,7 +10,7 @@ export default function TerminalNav() {
     { path: '/', label: 'home', external: false },
     { path: 'https://lukehinds.github.io/deepfabric/', label: 'docs', external: true },
     { path: '/blog', label: 'blog', external: false },
-    { path: 'https://github.com/lukehinds/deepfabric', label: 'community', external: true },
+    { path: 'https://github.com/lukehinds/deepfabric', label: 'github', external: true },
   ];
 
   return (

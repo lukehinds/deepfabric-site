@@ -54,7 +54,7 @@ export default function Home() {
               <div><span className="text-term-green">docs</span> - Navigate to documentation</div>
               <div><span className="text-term-green">blog</span> - Navigate to blog</div>
               <div><span className="text-term-green">about</span> - Navigate to about page</div>
-              <div><span className="text-term-green">community</span> - Navigate to community</div>
+              <div><span className="text-term-green">github</span> - Navigate to GitHub repository</div>
               <div><span className="text-term-green">clear</span> - Clear the terminal</div>
               <div><span className="text-term-green">whoami</span> - Display current user</div>
               <div><span className="text-term-green">date</span> - Show current date</div>
@@ -87,8 +87,8 @@ export default function Home() {
               <span className="text-terminal-fg text-xs">- Articles and updates</span>
             </div>
             <div className="flex gap-4">
-              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📄 community.md</Link>
-              <span className="text-terminal-fg text-xs">- Join our community</span>
+              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📄 github.md</Link>
+              <span className="text-terminal-fg text-xs">- Join our github</span>
             </div>
           </div>
         );
@@ -127,9 +127,9 @@ export default function Home() {
         output = <div className="text-term-cyan">Navigating to about...</div>;
         break;
 
-      case 'community':
+      case 'github':
         setTimeout(() => router.push('https://github.com/lukehinds/deepfabric'), 500);
-        output = <div className="text-term-cyan">Navigating to community...</div>;
+        output = <div className="text-term-cyan">Navigating to GitHub...</div>;
         break;
 
       case 'clear':
