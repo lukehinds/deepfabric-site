@@ -20,7 +20,7 @@ export default function Home() {
   const [tutorialMode, setTutorialMode] = useState(false);
   const [whoamiCount, setWhoamiCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const terminalOutputRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const asciiArt = `
@@ -210,65 +210,70 @@ export default function Home() {
 
   useEffect(() => {
     // Auto-scroll to bottom when history updates
-    if (terminalOutputRef.current) {
-      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [history]);
 
   return (
     <div className="overflow-hidden flex items-center justify-center px-4 md:px-8" style={{ height: 'calc(100vh - 4rem)' }}>
-      <TerminalWindow ref={terminalOutputRef} title={tutorialMode ? "deepfabric@tutorial:~" : "deepfabric@terminal:~"}>
+      <TerminalWindow title={tutorialMode ? "deepfabric@tutorial:~" : "deepfabric@terminal:~"} disableScroll={true}>
         {tutorialMode ? (
           <TutorialMode onExit={() => setTutorialMode(false)} />
         ) : (
-          <>
-            {/* ASCII Art Logo */}
-            <div className="ascii-art text-term-cyan mb-8">
-              {asciiArt}
-            </div>
-
-            {/* Welcome Message */}
-            <div className="space-y-2 mb-8">
-              <div>
-                <span className="text-term-green">DeepFabric</span>
-                <span className="text-terminal-fg"> - A micro agent training pipeline</span>
+          <div className="flex flex-col h-full">
+            {/* Scrollable content area */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto mb-4">
+              {/* ASCII Art Logo */}
+              <div className="ascii-art text-term-cyan mb-8">
+                {asciiArt}
               </div>
-              <div className="text-term-yellow">Version 1.0.0-beta</div>
-              <div className="text-terminal-fg">Type <span className="text-term-cyan">'help'</span> for available commands</div>
-            </div>
 
-            {/* Command History Output */}
-            {history.map((item, index) => (
-              <div key={index} className="mb-4">
-                <div className="mb-2">
-                  <TerminalPrompt />
-                  <span className="terminal-command">{item.command}</span>
+              {/* Welcome Message */}
+              <div className="space-y-2 mb-8">
+                <div>
+                  <span className="text-term-green">DeepFabric</span>
+                  <span className="text-terminal-fg"> - A Micro Agent Training Pipeline</span>
                 </div>
-                <div className="ml-4">{item.output}</div>
+                <div className="text-terminal-fg">Type <span className="text-term-cyan">'help'</span> for available commands</div>
               </div>
-            ))}
 
-            {/* Interactive Command Line */}
-            <div className="flex items-center border-t-2 border-terminal-border pt-4 mt-6">
-              <TerminalPrompt />
-              <input
-                ref={inputRef}
-                type="text"
-                value={command}
-                onChange={(e) => setCommand(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green ml-2"
-                placeholder="Type a command..."
-              />
+              {/* Command History Output */}
+              {history.map((item, index) => (
+                <div key={index} className="mb-4">
+                  <div className="mb-2">
+                    <TerminalPrompt />
+                    <span className="terminal-command">{item.command}</span>
+                  </div>
+                  <div className="ml-4">{item.output}</div>
+                </div>
+              ))}
             </div>
 
-            {/* Footer hints */}
-            <div className="mt-6 text-xs text-terminal-fg opacity-60">
-              <div>💡 Tip: Type 'help' to see all commands</div>
-              <div>⌨️  Use ↑/↓ arrows for command history</div>
-              <div>🎓 Try: Type 'tutorial' for an interactive guide</div>
+            {/* Fixed command input at bottom */}
+            <div className="flex-shrink-0">
+              {/* Interactive Command Line */}
+              <div className="flex items-center border-t-2 border-terminal-border pt-4">
+                <TerminalPrompt />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={command}
+                  onChange={(e) => setCommand(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-grow bg-transparent outline-none text-term-cyan caret-term-green ml-2"
+                  placeholder="Type a command..."
+                />
+              </div>
+
+              {/* Footer hints */}
+              <div className="mt-3 text-xs text-terminal-fg opacity-60">
+                <div>💡 Tip: Type 'help' to see all commands</div>
+                <div>⌨️  Use ↑/↓ arrows for command history</div>
+                <div>🎓 Try: Type 'tutorial' for an interactive guide</div>
+              </div>
             </div>
-          </>
+          </div>
         )}
       </TerminalWindow>
     </div>

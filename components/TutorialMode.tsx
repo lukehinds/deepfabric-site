@@ -15,7 +15,7 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
   const [showOutput, setShowOutput] = useState(true);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const currentStep = tutorialSteps[currentStepIndex];
   const isLastStep = currentStepIndex === tutorialSteps.length - 1;
@@ -27,6 +27,7 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
     setCommand('');
     setStepCompleted(false);
     setShowOutput(true);
+    setShowCopied(false);
 
     // Load progress from localStorage
     const savedProgress = localStorage.getItem('deepfabric-tutorial-progress');
@@ -47,11 +48,22 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
   }, [currentStepIndex]);
 
   useEffect(() => {
-    // Auto-scroll to bottom when content changes
-    if (contentRef.current) {
-      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    // Auto-scroll content area to bottom when output changes
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [showOutput, stepCompleted]);
+  }, [showOutput, commandHistory, currentStep.id]);
+
+  useEffect(() => {
+    // Continuously scroll during animation to keep up with new content
+    const scrollInterval = setInterval(() => {
+      if (scrollRef.current && !stepCompleted) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, 100);
+
+    return () => clearInterval(scrollInterval);
+  }, [stepCompleted]);
 
   const handleCommand = (cmd: string) => {
     const trimmedCmd = cmd.trim();
@@ -113,11 +125,13 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
     }
   };
 
+  const [showCopied, setShowCopied] = useState(false);
+
   const copyCommand = () => {
     if (currentStep.expectedCommand) {
       navigator.clipboard.writeText(currentStep.expectedCommand);
-      // Show brief toast or feedback
-      alert('Command copied to clipboard!');
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
     }
   };
 
@@ -144,8 +158,8 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Tutorial Header */}
-      <div className="border-b-2 border-terminal-border pb-4 mb-4">
+      {/* Tutorial Header - Fixed at top */}
+      <div className="border-b-2 border-terminal-border pb-4 mb-4 flex-shrink-0">
         <div className="flex justify-between items-start mb-2">
           <div>
             <h2 className="text-term-cyan text-xl font-bold">
@@ -186,8 +200,8 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
         </div>
       </div>
 
-      {/* Tutorial Content */}
-      <div ref={contentRef} className="flex-grow overflow-y-auto mb-4">
+      {/* Tutorial Content - Scrollable */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto mb-4">
         {/* Show command history */}
         {commandHistory.map((cmd, idx) => (
           <div key={idx} className="mb-4">
@@ -207,9 +221,9 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
         )}
       </div>
 
-      {/* Command Input / Display */}
+      {/* Command Input / Display - Fixed at bottom */}
       {currentStep.expectedCommand && (
-        <div className="border-t-2 border-terminal-border pt-4">
+        <div className="border-t-2 border-terminal-border pt-4 flex-shrink-0">
           {/* Download button for config files - show only when not completed */}
           {!stepCompleted && currentStep.hasDownloadableFile && (
             <div className="mb-3">
@@ -223,13 +237,20 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
           )}
 
           {/* Show expected command in a readable format */}
-          <div className="mb-3 p-3 bg-terminal-bg-light rounded border border-terminal-border">
-            <div className="flex items-start gap-2">
+          <div className="mb-3 p-3 bg-terminal-bg-light rounded border border-terminal-border relative group">
+            <div className="flex items-start gap-2 pr-12">
               <span className="text-term-green shrink-0">$</span>
               <code className="text-term-cyan text-sm break-all whitespace-pre-wrap leading-relaxed">
                 {currentStep.expectedCommand}
               </code>
             </div>
+            <button
+              onClick={copyCommand}
+              className="absolute top-2 right-2 p-2 rounded border border-terminal-border hover:border-term-cyan hover:bg-terminal-bg transition-colors text-term-cyan text-xs opacity-70 hover:opacity-100"
+              title="Copy command"
+            >
+              {showCopied ? '✓ Copied!' : '📋 Copy'}
+            </button>
           </div>
 
           {/* Input area - only show when not completed */}
@@ -279,23 +300,14 @@ export default function TutorialMode({ onExit }: TutorialModeProps) {
                   ⬇️ Download
                 </button>
               )}
-              {currentStep.expectedCommand && (
-                <button
-                  onClick={copyCommand}
-                  className="px-4 py-2 border border-terminal-border rounded hover:border-term-cyan transition-colors text-term-cyan text-sm"
-                  title="Copy command"
-                >
-                  📋 Copy
-                </button>
-              )}
             </div>
           )}
         </div>
       )}
 
-      {/* Auto-advance for steps without commands */}
+      {/* Auto-advance for steps without commands - Fixed at bottom */}
       {!currentStep.expectedCommand && !stepCompleted && (
-        <div className="border-t-2 border-terminal-border pt-4">
+        <div className="border-t-2 border-terminal-border pt-4 flex-shrink-0">
           <button
             onClick={() => setStepCompleted(true)}
             className="w-full bg-term-green text-terminal-bg px-4 py-2 rounded hover:bg-term-cyan transition-colors font-bold"
