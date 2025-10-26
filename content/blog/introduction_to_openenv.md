@@ -6,8 +6,6 @@ tags: ["llm", "ai", "reinforcement learning", "infrastructure", "pytorch"]
 author: "Luke Hinds"
 ---
 
-# OpenEnv: A Standard for Agentic Execution Environments
-
 The reinforcement learning community has long struggled with a fundamental infrastructure problem: every research group and company builds their own execution environments from scratch. This fragmentation means researchers spend significant time on infrastructure rather than algorithms, and sharing work requires substantial integration effort. OpenEnv, a collaboration between Meta-PyTorch and Hugging Face, addresses this by providing a standardized specification and hub for agentic execution environments.
 
 ## The Core Problem
