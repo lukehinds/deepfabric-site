@@ -87,8 +87,8 @@ export default function Home() {
               <span className="text-terminal-fg text-xs">- Articles and updates</span>
             </div>
             <div className="flex gap-4">
-              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📄 github.md</Link>
-              <span className="text-terminal-fg text-xs">- Join our github</span>
+              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📁 github/</Link>
+              <span className="text-terminal-fg text-xs">- Join our GitHub</span>
             </div>
           </div>
         );
