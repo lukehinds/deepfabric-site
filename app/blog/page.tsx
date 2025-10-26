@@ -14,7 +14,7 @@ export default function BlogPage() {
         <div className="text-center mb-16">
           <SectionTitle>Blog</SectionTitle>
           <p className="text-xl text-gray-300">
-            DeepFabric updates, tutorials, and insights from the world of micro agent training.
+            DeepFabric updates, tutorials, and insights from the community.
           </p>
         </div>
 
