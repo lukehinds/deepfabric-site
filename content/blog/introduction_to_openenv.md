@@ -18,6 +18,26 @@ Consider training a coding agent. You need a sandboxed Python interpreter that c
 
 ## Architecture and Design
 
+```text
+┌─────────────────────────────────────────────────────────┐
+│                    Client Application                   │
+│  ┌────────────────┐              ┌──────────────────┐   │
+│  │  EchoEnv       │              │  CodingEnv       │   │
+│  │ (HTTPEnvClient)│              │  (HTTPEnvClient) │   │
+│  └────────┬───────┘              └────────┬─────────┘   │
+└───────────┼───────────────────────────────┼─────────────┘
+            │ HTTP                          │ HTTP
+            │ (reset, step, state)          │
+┌───────────▼───────────────────────────────▼─────────────┐
+│              Docker Containers (Isolated)               │
+│  ┌──────────────────────┐    ┌──────────────────────┐   │
+│  │ FastAPI Server       │    │ FastAPI Server       │   │
+│  │   EchoEnvironment    │    │ PythonCodeActEnv     │   │
+│  │ (Environment base)   │    │ (Environment base)   │   │
+│  └──────────────────────┘    └──────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+```
+
 OpenEnv takes a client-server approach with containerized execution. Each environment runs as a FastAPI server inside a Docker container, exposing a simple HTTP interface. Clients interact with environments through typed Python classes that handle HTTP communication transparently. This architecture provides strong isolation guarantees while maintaining the familiar Gymnasium-style API.
 
 The core abstraction consists of three methods that any environment must implement. The `reset()` method initializes a new episode and returns the initial observation. The `step(action)` method executes an action and returns an observation, reward, and termination flag. The `state()` method provides access to episode metadata like the current step count and episode identifier. These methods mirror Gymnasium's interface intentionally, making adoption straightforward for developers familiar with that ecosystem.
@@ -30,7 +50,26 @@ Creating a new OpenEnv environment involves implementing both server and client 
 
 The framework provides utilities that simplify deployment. The `LocalDockerProvider` can spin up containers on your local Docker daemon, while planned Kubernetes integration will enable cluster deployment. When you create a client instance using `from_docker_image()`, it automatically starts the container, waits for the server to be ready, and establishes the HTTP connection. Cleanup is handled through a simple `close()` call that stops and removes the container.
 
-Consider the included coding environment as a practical example. It executes Python code in a sandboxed environment using smolagents. The action type defines a single field for the code to execute. The observation captures stdout, stderr, exit codes, and any error messages. The environment maintains execution context across steps within an episode, allowing agents to define functions or variables that persist. This design enables training agents on multi-step coding tasks where previous work builds on earlier steps.
+Consider the included coding environment below as a practical example. It executes Python code in a sandboxed environment using smolagents. The action type defines a single field for the code to execute. The observation captures stdout, stderr, exit codes, and any error messages. The environment maintains execution context across steps within an episode, allowing agents to define functions or variables that persist. This design enables training agents on multi-step coding tasks where previous work builds on earlier steps.
+
+```python
+from envs.echo_env import EchoAction, EchoEnv
+
+# Automatically start container and connect
+client = EchoEnv.from_docker_image("echo-env:latest")
+
+# Reset the environment
+result = client.reset()
+print(result.observation.echoed_message)  # "Echo environment ready!"
+
+# Send messages
+result = client.step(EchoAction(message="Hello, World!"))
+print(result.observation.echoed_message)  # "Hello, World!"
+print(result.reward)  # 1.3 (based on message length)
+
+# Cleanup
+client.close()  # Stops and removes container
+```
 
 ## The Environment Hub
 
@@ -45,6 +84,27 @@ OpenEnv integrates with the broader PyTorch ecosystem through several connection
 The HTTP-based architecture enables language-agnostic clients. While the reference implementation provides Python clients, any language with HTTP capabilities can interact with OpenEnv servers. This flexibility matters for organizations with polyglot codebases or for integrating agents into existing systems written in different languages.
 
 Docker containerization provides several practical benefits beyond isolation. Environments can bundle complex dependencies without affecting the host system. You can pin exact versions of libraries and system packages, ensuring reproducibility across different machines. Container registries enable sharing environments as self-contained artifacts that work consistently across development, testing, and production.
+
+## Current Support RL Tools
+
+Some communities have already provided examples of how to integrate OpenEnv with popular RL tools:
+
+### torchforge
+A GRPO BlackJack training example is available at: [examples/grpo_blackjack/](https://github.com/meta-pytorch/OpenEnv/blob/main/examples/grpo_blackjack)
+
+### TRL
+A [TRL example](https://huggingface.co/docs/trl/main/en/openenv) on how to integrate OpenEnv environments with GRPO training.
+
+### Unsloth
+A [2048 game example](hhttps://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/OpenEnv_gpt_oss_(20B)_Reinforcement_Learning_2048_Game.ipynb) based on gpt-oss is available in a Colab notebook. Unsloth training is optimized efficiently to run on a free T4 GPU. If you're not already using unsloth, check them out , as they provide a great framework for training LLMs with RL, SFT, etc.
+
+### SkyRL
+A [SkyRL example](https://skyrl.readthedocs.io/en/latest/examples/openenv.html) on how to train on OpenEnv environments with SkyRL is available.
+
+### ART
+A [ART example](https://art.openpipe.ai/integrations/openenv-integration) on how OpenEnv environments can be used to train models with ART is available.
+
+See the [GitHub repository](https://github.com/meta-pytorch/OpenEnv) for more details and additional examples.
 
 ## Development Workflow
 
@@ -71,7 +131,5 @@ Several extensions seem likely. Kubernetes deployment support will enable runnin
 The partnership between Meta-PyTorch and Hugging Face provides institutional backing that increases the likelihood of sustained development and community growth. Both organizations have track records of building successful open-source infrastructure that becomes industry standard. OpenEnv fits naturally into the PyTorch ecosystem as a complement to Torchforge and other agentic AI tools.
 
 For developers working on agent training, OpenEnv offers a pragmatic path forward. You can start using existing environments immediately for common tasks like coding and games. When you need custom environments, the framework handles the infrastructure concerns while you focus on environment logic. The standardized interface means training code works across different environments with minimal changes. These benefits compound as the community contributes more environments and the specification matures.
-
-The source code lives at https://github.com/meta-pytorch/OpenEnv. The interactive tutorial provides hands-on experience with the framework. The community hub at https://huggingface.co/openenv showcases available environments. Together, these resources provide a good grounding needed to start building with OpenEnv today.
 
 We will also be looking to leverage OpenEnv in upcoming DeepFabric releases to provide standardized execution environments for training agentic models using DeepFabric datasets. By combining DeepFabric's dataset generation, evaluation and fine-tuning capabilities with OpenEnv's execution infrastructure, we can offer a complete end-to-end solution for building intelligent agents. Stay tuned for more details on this integration in future articles!
