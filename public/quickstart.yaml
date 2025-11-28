@@ -36,25 +36,4 @@ dataset:
     num_steps: 2  # Number of generation steps
     batch_size: 2
     sys_msg: false
-  save_as: "dataset_raw.jsonl"
-
-  # Format for general training (Unsloth, Axolotl, HF TRL, etc.)
-  # formatters:
-  #   - name: "training_format"
-  #     template: "builtin://conversations.py"
-  #     output: "dataset_formatted.jsonl"
-  #     config:
-  #       include_system: false
-
-# Optional: Upload to HuggingFace
-# huggingface:
-#   repository: "your-username/your-dataset"
-#   tags: ["synthetic", "deepfabric"]
-
-# Optional: Upload to Kaggle
-# kaggle:
-#   handle: "your-username/your-dataset"
-#   tags: ["synthetic", "deepfabric", "vehicle-mechanics"]
-#   description: "Synthetic Q&A dataset about vehicle mechanics"
-#   version_notes: "Initial dataset version"
-  
+  save_as: "basic-dataset.jsonl"

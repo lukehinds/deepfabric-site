@@ -35,18 +35,6 @@ topic_tree:
   depth: 2
   save_as: "topics.jsonl"
 
-# ============================================================================
-# OPTION 1: SINGLE-TURN AGENT (One-shot tool usage)
-# ============================================================================
-# Agent receives a query, uses tools, and provides a complete answer
-# Perfect for training function-calling models
-#
-# Example interaction:
-# User: "What's the weather in Paris?"
-# Assistant: [calls get_weather("Paris")] → "15°C, sunny"
-# Assistant: "The weather in Paris is currently 15°C and sunny."
-# ============================================================================
-
 data_engine:
   generation_system_prompt: |
     Generate examples of tool usage with clear reasoning.
@@ -56,7 +44,7 @@ data_engine:
 
   # Chain of thought with agent mode
   conversation_type: "chain_of_thought"
-  reasoning_style: "structured"  # or "freetext" or "hybrid"
+  reasoning_style: "agent"
 
   # Single-turn agent configuration
   agent_mode: "single_turn"
@@ -75,148 +63,8 @@ data_engine:
   temperature: 0.8
 
 dataset:
-  save_as: "dataset_single_turn.jsonl"
+  save_as: "agent-tools-dataset.jsonl"
   creation:
     num_steps: 2
     batch_size: 2
     sys_msg: true
-
-  # Format for training (tool calling format)
-  formatters:
-    - name: "tool_calling"
-      template: "builtin://tool_calling"
-      output: "dataset_single_turn_formatted.jsonl"
-      config:
-        system_prompt: |
-          You are a function calling AI model. You are provided with function
-          signatures within <tools></tools> XML tags. For each function call,
-          return a json object with function name and arguments within
-          <tool_call></tool_call> XML tags.
-        include_tools_in_system: true
-
-# ============================================================================
-# OPTION 2: MULTI-TURN AGENT (Complex multi-step interactions)
-# ============================================================================
-# Uncomment this section for multi-turn agent conversations
-#
-# Agent can use multiple tools across multiple turns, asking for clarification,
-# and building on previous tool results
-#
-# Example interaction:
-# User: "Plan my trip to Tokyo"
-# Assistant: [calls get_weather("Tokyo")] → "22°C, sunny"
-# Assistant: "Weather looks great! What dates are you considering?"
-# User: "Next week"
-# Assistant: [calls search_web("Tokyo attractions")] → [results]
-# Assistant: "Here are top attractions based on the weather..."
-#
-# Required for XLAM format training
-# ============================================================================
-
-# data_engine:
-#   generation_system_prompt: |
-#     Generate multi-turn conversations showing complex tool usage.
-#     Agent should ask clarifying questions and build on previous results.
-#
-#   instructions: "Create realistic multi-step scenarios with tool interactions."
-#
-#   # Chain of thought with multi-turn agent
-#   conversation_type: "chain_of_thought"
-#   reasoning_style: "hybrid"
-#
-#   # Multi-turn agent configuration
-#   agent_mode: "multi_turn"
-#
-#   available_tools:
-#     - "get_weather"
-#     - "calculate"
-#     - "search_web"
-#     - "get_time"
-#     - "book_reservation"
-#
-#   max_tools_per_query: 5
-#
-#   provider: "openai"
-#   model: "gpt-4o"
-#   temperature: 0.8
-#
-# dataset:
-#   save_as: "dataset_multi_turn_xlam.jsonl"
-#   creation:
-#     num_steps: 10
-#     batch_size: 1  # Multi-turn is more complex, use smaller batches
-#     provider: "openai"
-#     model: "gpt-4o"
-#     sys_msg: true
-
-# ============================================================================
-# CUSTOM TOOLS
-# ============================================================================
-# You can define custom tools in addition to built-in ones
-# See custom-tools.yaml for the tool definition format
-#
-# To use custom tools, add to your data_engine config:
-#
-# custom_tools:
-#   - name: "database_query"
-#     description: "Query a SQL database"
-#     parameters:
-#       - name: "query"
-#         type: "str"
-#         description: "SQL query to execute"
-#         required: true
-#       - name: "database"
-#         type: "str"
-#         description: "Database name"
-#         required: true
-#     returns: "Query results as JSON"
-# ============================================================================
-
-# ============================================================================
-# BUILT-IN TOOLS AVAILABLE:
-#
-# - get_weather: Get current weather for a location
-# - calculate: Perform mathematical calculations
-# - search_web: Search the web for information
-# - get_time: Get current time in a timezone
-# - send_email: Send an email (example tool)
-# - book_reservation: Book a reservation (example tool)
-#
-# Tool definitions are automatically generated with proper schemas
-# ============================================================================
-
-# ============================================================================
-# FORMATTERS FOR TOOL-CALLING DATASETS:
-#
-# 1. tool_calling formatter:
-#    - Embeds tool calls and responses in conversation
-#    - Uses <tool_call> and <tool_response> tags
-#    - Good for general tool-calling training
-#
-# 2. single_tool_call formatter:
-#    - Each tool call in separate message
-#    - More granular conversation structure
-#    - Better for some training frameworks
-#
-# 3. xlam_v2 formatter:
-#    - APIGen/XLAM v2 multi-turn format
-#    - Transforms multi_turn agent data to XLAM specification
-#    - Industry standard for agent training
-#
-# See 05-output-formats.yaml for formatter configuration examples
-# ============================================================================
-
-# ============================================================================
-# CHOOSING THE RIGHT AGENT MODE:
-#
-# Use SINGLE_TURN when:
-# - Training function-calling capabilities
-# - Tasks can be completed in one interaction
-# - You want simpler training data
-#
-# Use MULTI_TURN when:
-# - Training conversational agents
-# - Tasks require multiple steps or clarification
-# - You need XLAM format output
-# - Training more sophisticated agent behavior
-# ============================================================================

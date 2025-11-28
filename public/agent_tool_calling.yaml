@@ -1,110 +1,70 @@
-# DeepFabric Configuration for Agent Tool-Calling Dataset Generation
+# ============================================================================
+# AGENT & TOOL CALLING - Single-turn and multi-turn agent modes
+# ============================================================================
+# Purpose: Generate datasets for training tool-using agents
+# Usage: deepfabric start examples/configs/04-agent-tools.yaml
+# ============================================================================
 #
-# This config demonstrates:
-# 1. Agent CoT generation with tool reasoning
-# 2. Custom tool definitions from YAML file
-# 3. Formatting into embedded execution traces for training
+# Agent modes enable tool-calling capabilities:
 #
-# Usage: deepfabric start agent_tool_calling.yaml
+# 1. SINGLE_TURN - Agent completes task in one interaction
+#    Use for: Function calling, simple tool usage, API interactions
+#
+# 2. MULTI_TURN - Multi-step conversations with tool usage
+#    Use for: Complex tasks requiring multiple tools, XLAM format training
+#
+# Requirements:
+# - Must use conversation_type: "chain_of_thought"
+# - Must specify reasoning_style of "agent"
+# - Must configure available_tools
+#
+# ============================================================================
 
-# Main system prompt that defines the agent's behavior
 dataset_system_prompt: |
-  You are an intelligent AI assistant with access to various tools and functions.
-  When presented with a task or question, you should:
-  1. Analyze what information or actions are needed
-  2. Select the appropriate tool(s) to use
-  3. Execute the tool(s) with proper parameters
-  4. Interpret the results and provide a clear answer
+  You are an AI assistant with access to various tools and functions.
+  When given a task:
+  1. Analyze what tools are needed
+  2. Execute tools with proper parameters
+  3. Interpret results and provide a clear answer
 
-  Always think step-by-step about which tools to use and why.
-
-# Topic tree generation configuration
 topic_tree:
-  # Root topic for generating the hierarchy
-  topic_prompt: "Real-world scenarios requiring tool usage for task completion"
-
-  # Model configuration
+  topic_prompt: "Real-world tasks requiring tool usage (weather, calculations, web search, time)"
   provider: "openai"
   model: "gpt-4o"
-  temperature: 0.7
-
-  # Tree structure parameters
-  depth: 2
   degree: 2
+  depth: 2
+  save_as: "topics.jsonl"
 
-  # Save the generated tree
-  save_as: "agent_tool_topics.jsonl"
-
-# Data generation engine configuration
 data_engine:
-  # System prompt for content generation
   generation_system_prompt: |
-    Generate realistic agent scenarios showing step-by-step reasoning with tool usage.
+    Generate examples of tool usage with clear reasoning.
+    Show why tools are chosen and how results are interpreted.
 
-    Each example should demonstrate clear thinking followed by appropriate tool execution.
+  instructions: "Create realistic scenarios requiring tool usage to complete tasks."
 
-    Show reasoning for:
-    - What the user needs
-    - Why a specific tool is chosen
-    - How parameters are determined
-    - What the tool result means
+  # Chain of thought with agent mode
+  conversation_type: "chain_of_thought"
+  reasoning_style: "agent"
 
-    Make examples pedagogically valuable for training reasoning skills.
+  # Single-turn agent configuration
+  agent_mode: "single_turn"
 
-  # Model for generating the actual training data
+  # Built-in tools available for use
+  available_tools:
+    - "get_weather"      # Get weather for a location
+    - "calculate"        # Perform calculations
+    - "search_web"       # Search the web
+    - "get_time"         # Get current time in timezone
+
+  max_tools_per_query: 3  # Maximum tools per example
+
   provider: "openai"
   model: "gpt-4o"
   temperature: 0.8
 
-  # Use the agent_cot_hybrid schema for detailed step-by-step reasoning with tools
-  conversation_type: "agent_cot_tools"
-
-  # Tool configuration
-  available_tools: ["get_weather", "search_web", "calculate", "get_time"]
-  max_tools_per_query: 2
-
-  # Uncomment to load custom tools from YAML file
-  # tool_registry_path: "examples/custom_tools.yaml"
-
-  # Save the generated data
-  save_as: "agent_tool_calling.jsonl"
-
-# Dataset configuration
 dataset:
-  # Required save path for the final dataset
-  save_as: "agent_tool_calling_final.jsonl"
-
+  save_as: "agent-tools-dataset.jsonl"
   creation:
-    # Dataset creation parameters
     num_steps: 2
     batch_size: 2
     sys_msg: true
-
-  # Apply the tool-calling formatter to convert to embedded execution format
-  formatters:
-    - name: "tool_calling_formatted"
-      template: "builtin://tool_calling"
-      output: "agent_tool_calling_formatted.jsonl"
-      config:
-        # Custom system prompt for the formatted output
-        system_prompt: |
-          You are a function calling AI model. You are provided with function signatures
-          within <tools></tools> XML tags. You may call one or more functions to assist
-          with the user query. For each function call return a json object with function
-          name and arguments within <tool_call></tool_call> XML tags.
-
-        # Include available tools in system message
-        include_tools_in_system: true
-
-        # Customize the formatting templates
-        thinking_format: "<think>{reasoning}</think>"
-        tool_call_format: "<tool_call>\n{tool_call}\n</tool_call>"
-        tool_response_format: "<tool_response>\n{tool_output}\n</tool_response>"
-
-# Optional: Upload to Hugging Face Hub
-huggingface:
-  # Repository to push to
-  repository: "your-username/agent-tool-calling-dataset"
-
-  # Tags for the dataset
-  tags: ["agent", "tool-calling", "function-calling", "reasoning", "cot"]
