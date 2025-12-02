@@ -26,7 +26,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/lukehinds/deepfabric" className="text-slate-600 hover:text-brand-blue transition-colors">
+                <Link href="https://github.com/always-further/deepfabric" className="text-slate-600 hover:text-brand-blue transition-colors">
                   GitHub
                 </Link>
               </li>

@@ -8,9 +8,9 @@ export default function Header() {
 
   const navLinks = [
     { href: '/', label: 'Home', external: false },
-    { href: 'https://lukehinds.github.io/deepfabric/', label: 'Docs', external: true },
+    { href: 'https://always-further.github.io/deepfabric/', label: 'Docs', external: true },
     { href: '/blog', label: 'Blog', external: false },
-    { href: 'https://github.com/lukehinds/deepfabric', label: 'Community', external: true },
+    { href: 'https://github.com/always-further/deepfabric', label: 'Community', external: true },
   ];
 
   return (

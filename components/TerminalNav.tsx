@@ -8,9 +8,9 @@ export default function TerminalNav() {
 
   const navItems = [
     { path: '/', label: 'home', external: false },
-    { path: 'https://lukehinds.github.io/deepfabric/', label: 'docs', external: true },
+    { path: 'https://always-further.github.io/deepfabric/', label: 'docs', external: true },
     { path: '/blog', label: 'blog', external: false },
-    { path: 'https://github.com/lukehinds/deepfabric', label: 'github', external: true },
+    { path: 'https://github.com/always-further/deepfabric', label: 'github', external: true },
   ];
 
   return (

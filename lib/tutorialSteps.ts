@@ -292,7 +292,7 @@ What you've learned:
 Next steps:
   📚 Read the docs: type 'docs' to explore documentation
   💬 Join Discord: Connect with the community https://discord.gg/pPcjYzGvbS
-  ⭐ Star us: https://github.com/lukehinds/deepfabric
+  ⭐ Star us: https://github.com/always-further/deepfabric
 
 Common commands to try:
   • deepfabric info         - Show version and config

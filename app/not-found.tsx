@@ -36,7 +36,7 @@ export default function NotFound() {
                 <span className="directory">home/</span>
               </Link>
               <Link
-                href="https://lukehinds.github.io/deepfabric/"
+                href="https://always-further.github.io/deepfabric/"
                 className="file-item"
                 target="_blank"
                 rel="noopener noreferrer"

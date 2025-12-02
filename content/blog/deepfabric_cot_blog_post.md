@@ -264,8 +264,8 @@ Whether you're building the next breakthrough in reasoning AI or just need bette
 ---
 
 ### Try DeepFabric Now:
-- 📚 **GitHub**: [https://github.com/lukehinds/deepfabric](https://github.com/lukehinds/deepfabric)
-- 📖 **Documentation**: [https://lukehinds.github.io/DeepFabric/](https://lukehinds.github.io/DeepFabric/)
+- 📚 **GitHub**: [https://github.com/always-further/deepfabric](https://github.com/always-further/deepfabric)
+- 📖 **Documentation**: [https://always-further.github.io/deepfabric/](https://always-further.github.io/deepfabric/)
 - 💬 **Discord**: Join the community for support and sharing datasets
 
 ---

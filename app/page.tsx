@@ -73,7 +73,7 @@ export default function Home() {
           <div className="space-y-1">
             <div className="flex gap-4">
               <Link
-                href="https://lukehinds.github.io/deepfabric/"
+                href="https://always-further.github.io/deepfabric/"
                 className="text-term-blue hover:text-term-cyan"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -87,7 +87,7 @@ export default function Home() {
               <span className="text-terminal-fg text-xs">- Articles and updates</span>
             </div>
             <div className="flex gap-4">
-              <Link href="https://github.com/lukehinds/deepfabric" className="text-term-green hover:text-term-cyan">📁 github/</Link>
+              <Link href="https://github.com/always-further/deepfabric" className="text-term-green hover:text-term-cyan">📁 github/</Link>
               <span className="text-terminal-fg text-xs">- Join our GitHub</span>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function Home() {
         break;
 
       case 'docs':
-        setTimeout(() => window.open('https://lukehinds.github.io/deepfabric/', '_blank'), 500);
+        setTimeout(() => window.open('https://always-further.github.io/deepfabric/', '_blank'), 500);
         output = <div className="text-term-cyan">Opening docs in new tab...</div>;
         break;
 
@@ -128,7 +128,7 @@ export default function Home() {
         break;
 
       case 'github':
-        setTimeout(() => router.push('https://github.com/lukehinds/deepfabric'), 500);
+        setTimeout(() => router.push('https://github.com/always-further/deepfabric'), 500);
         output = <div className="text-term-cyan">Navigating to GitHub...</div>;
         break;
 
