@@ -27,13 +27,13 @@ export default function Home() {
           </h2>
 
           <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
-            DeepFabric is a comprehensive LLM fine-tuning framework designed to help you build smaller, smarter models that punch above their weight.
+            DeepFabric is a comprehensive LLM fine-tuning , training and evaluation framework designed to help you build smaller, smarter models that punch above their weight.
           </p>
           <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
-            Create high-quality training datasets - including complex reasoning chains - with precise tool execution and significantly reduced hallucinations. Whether you are fine-tuning for domain expertise, agentic workflows, or structured outputs, DeepFabric gives you the control to shape model behavior exactly how you need it.
+            Create high-quality training & evaluation datasets - including complex reasoning chains - with precise tool execution and significantly reduced hallucinations. Whether you are fine-tuning for domain expertise, agentic workflows, or structured outputs, DeepFabric gives you the control to shape model behavior exactly how you need it.
           </p>
           <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
-            The result? Fine-tuned models that can match or outperform from frontier labs, while running on a fraction of the hardware. You get the cost efficiency of a smaller model, the performance of a larger one, and all the security and privacy benefits of keeping everything local.
+            The result? Fine-tuned models that can match or outperform from frontier labs, while running on a fraction of the hardware.
           </p>
 
           {/* CTA Buttons */}
