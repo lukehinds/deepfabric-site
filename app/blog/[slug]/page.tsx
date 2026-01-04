@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { format } from 'date-fns';
-import ArcadeButton from '@/components/ArcadeButton';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '@/components/CodeBlock';
@@ -28,67 +28,73 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen py-20 px-4">
+      <div className="max-w-3xl mx-auto">
         {/* Back Button */}
         <div className="mb-8">
-          <ArcadeButton href="/blog" variant="cyan">
-            ← Back to Blog
-          </ArcadeButton>
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Blog
+          </Link>
         </div>
 
         {/* Article Header */}
-        <article className="neon-border bg-space-dark/60 backdrop-blur-sm p-8 md:p-12">
-          <div className="mb-6">
-            <h1 className="font-arcade text-2xl md:text-4xl text-neon-cyan mb-4">
+        <article>
+          <header className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {post.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-4">
-              <span className="text-white">{post.author}</span>
-              <span>•</span>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+              <span className="font-medium text-foreground">{post.author}</span>
+              <span>-</span>
               <span>{format(new Date(post.date), 'MMMM dd, yyyy')}</span>
             </div>
             {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs px-3 py-1 border border-neon-pink text-neon-pink"
+                    className="text-xs px-3 py-1 border border-border rounded-full text-muted-foreground"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             )}
-          </div>
+          </header>
 
           {/* Article Content */}
-          <div className="prose prose-invert prose-cyan max-w-none">
+          <div className="prose max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => (
-                  <h1 className="font-arcade text-3xl text-neon-cyan mt-8 mb-4">
+                  <h1 className="text-3xl font-bold text-foreground mt-10 mb-4">
                     {children}
                   </h1>
                 ),
                 h2: ({ children }) => (
-                  <h2 className="font-arcade text-2xl text-neon-pink mt-6 mb-3">
+                  <h2 className="text-2xl font-bold text-foreground mt-8 mb-3">
                     {children}
                   </h2>
                 ),
                 h3: ({ children }) => (
-                  <h3 className="font-arcade text-xl text-neon-purple mt-4 mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mt-6 mb-2">
                     {children}
                   </h3>
                 ),
                 p: ({ children }) => (
-                  <p className="text-gray-300 leading-relaxed mb-4">{children}</p>
+                  <p className="text-muted-foreground leading-relaxed mb-4">{children}</p>
                 ),
                 a: ({ href, children }) => (
                   <a
                     href={href}
-                    className="text-neon-cyan hover:text-neon-pink transition-colors underline"
+                    className="text-primary hover:underline transition-colors"
                   >
                     {children}
                   </a>
@@ -99,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
                   if (!language) {
                     return (
-                      <code className="bg-black/50 text-neon-cyan px-2 py-1 rounded text-sm">
+                      <code className="bg-muted text-primary px-2 py-1 rounded text-sm font-mono">
                         {children}
                       </code>
                     );
@@ -112,17 +118,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   );
                 },
                 ul: ({ children }) => (
-                  <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300">
+                  <ul className="list-disc list-inside space-y-2 mb-4 text-muted-foreground">
                     {children}
                   </ul>
                 ),
                 ol: ({ children }) => (
-                  <ol className="list-decimal list-inside space-y-2 mb-4 text-gray-300">
+                  <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">
                     {children}
                   </ol>
                 ),
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-neon-purple pl-4 italic text-gray-400 my-4">
+                  <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-4">
                     {children}
                   </blockquote>
                 ),
@@ -134,10 +140,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </article>
 
         {/* Back to Blog */}
-        <div className="mt-8 text-center">
-          <ArcadeButton href="/blog" variant="pink">
-            ← Back to All Posts
-          </ArcadeButton>
+        <div className="mt-12 pt-8 border-t border-border">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-full font-medium hover:bg-muted transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to All Posts
+          </Link>
         </div>
       </div>
     </div>

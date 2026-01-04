@@ -1,69 +1,58 @@
 import Link from 'next/link';
-import TerminalWindow from '@/components/TerminalWindow';
-import TerminalPrompt from '@/components/TerminalPrompt';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
-      <TerminalWindow title="deepfabric@terminal:~ [ERROR]">
-        <div className="space-y-6">
-          {/* Error Message */}
-          <div>
-            <TerminalPrompt />
-            <span className="terminal-command">cat /404</span>
-          </div>
+    <div className="min-h-screen px-4 flex items-center justify-center">
+      <div className="max-w-md text-center">
+        {/* Error Code */}
+        <div className="text-8xl font-bold text-primary mb-4">404</div>
 
-          <div className="ml-4 space-y-4">
-            <div className="text-term-red text-lg font-bold">
-              bash: /404: No such file or directory
-            </div>
+        {/* Error Message */}
+        <h1 className="text-2xl font-bold text-foreground mb-2">
+          Page not found
+        </h1>
+        <p className="text-muted-foreground mb-8">
+          The page you are looking for does not exist or has been moved.
+        </p>
 
-            <div className="text-term-yellow">
-              Error 404: The page you're looking for doesn't exist
-            </div>
-
-            <div className="text-terminal-fg">
-              This path is not part of the DeepFabric file system.
-            </div>
-          </div>
-
-          {/* Suggestions */}
-          <div className="mt-8">
-            <div className="text-term-green mb-2">Did you mean one of these?</div>
-            <div className="ml-4 space-y-1">
-              <Link href="/" className="file-item">
-                <span className="text-term-blue">📁</span>
-                <span className="directory">home/</span>
-              </Link>
-              <Link
-                href="https://always-further.github.io/deepfabric/"
-                className="file-item"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="text-term-blue">📁</span>
-                <span className="directory">docs/</span>
-              </Link>
-              <Link href="/blog" className="file-item">
-                <span className="text-term-blue">📁</span>
-                <span className="directory">blog/</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Navigation hint */}
-          <div className="mt-8 border-t border-terminal-border pt-4">
-            <div className="text-terminal-fg text-sm">
-              Type <span className="text-term-cyan">cd /</span> to return home
-            </div>
-            <div className="mt-4">
-              <Link href="/" className="btn-terminal">
-                Return to Home
-              </Link>
-            </div>
+        {/* Suggestions */}
+        <div className="space-y-3 mb-8">
+          <p className="text-sm text-muted-foreground">Try one of these instead:</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link
+              href="/"
+              className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-muted transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="https://docs.deepfabric.dev"
+              className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-muted transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Docs
+            </Link>
+            <Link
+              href="/blog"
+              className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-muted transition-colors"
+            >
+              Blog
+            </Link>
           </div>
         </div>
-      </TerminalWindow>
+
+        {/* Return Home Button */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-all"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Return to Home
+        </Link>
+      </div>
     </div>
   );
 }

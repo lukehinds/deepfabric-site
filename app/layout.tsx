@@ -1,11 +1,34 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import TerminalNav from "@/components/TerminalNav";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Script from "next/script";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-plex-mono",
+  weight: ["200", "300", "400", "500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "DeepFabric - Micro Agent Training Pipeline",
-  description: "Build agents that do what you want, how you want.",
+  title: "DeepFabric - AI Dataset Generation",
+  description: "Generate high-quality training datasets for your AI models with DeepFabric.",
+  keywords: ["AI", "dataset generation", "machine learning", "training data", "synthetic data"],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    title: "DeepFabric - AI Dataset Generation",
+    description: "Generate high-quality training datasets for your AI models with DeepFabric.",
+  },
 };
 
 export default function RootLayout({
@@ -31,19 +54,12 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="font-mono antialiased relative">
-        {/* Scanline effect overlay */}
-        <div className="scanlines fixed inset-0 pointer-events-none z-50 opacity-30" />
-
-        {/* CRT glow effect */}
-        <div className="crt-glow fixed inset-0 pointer-events-none" />
-
-        {/* Terminal Navigation */}
-        <TerminalNav />
-
-        <main className="relative z-10 min-h-screen pt-16">
+      <body className={`${inter.className} ${inter.variable} ${plexMono.variable} font-sans antialiased`}>
+        <Header />
+        <main className="min-h-screen">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
