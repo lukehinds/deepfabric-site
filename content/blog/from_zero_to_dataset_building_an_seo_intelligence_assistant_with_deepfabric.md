@@ -1,6 +1,6 @@
 ---
 title: "From Zero to Dataset: Building an SEO Intelligence Assistant with DeepFabric"
-date: "2025-01-05"
+date: "2026-01-05"
 excerpt: "Learn how to build synthetic datasets with tool-calling capabilities for AI agents. A hands-on guide to creating an SEO assistant using DeepFabric, DataForSEO APIs, and the SPIN framework."
 tags: ["deepfabric", "synthetic-data", "tool-calling", "mcp", "seo", "gemini", "agent", "tutorial"]
 author: "Stephen Parkinson"
