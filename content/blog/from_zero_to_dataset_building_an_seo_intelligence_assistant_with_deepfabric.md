@@ -380,3 +380,20 @@ Now that the foundational dataset is generated, it's time to put this data to wo
 The methodology we've covered here isn't limited to SEO assistants—you can apply this same approach to any tool-calling scenario. The combination of DeepFabric's synthetic data generation capabilities with proper tool integration creates a powerful foundation for building specialized AI agents.
 
 Stay tuned for Part 2, where we'll bring this SEO assistant to life!
+
+## Example Files and Code
+
+All the configuration files, scripts, and mock data referenced in this tutorial are available in the companion GitHub repository:
+
+**Repository**: [deepfabric-dataforseo-blog](https://github.com/scp7/deepfabric-dataforseo-blog)
+
+The repository includes:
+
+- `spin-dataforseo.yaml` - Complete DeepFabric configuration file
+- `dataforseo-schema.yaml` - DataForSEO MCP server tool schema
+- `dataforseo-mock-data.json` - Comprehensive mock API responses
+- `load-dataforseo-mock-data.sh` - Script to load mock data into SPIN
+- `analyze-topic-graph.ipynb` - Jupyter notebook for analyzing the generated topic graph
+- Example topic graphs and dataset samples
+
+Feel free to clone the repository and use these files as a starting point for your own tool-calling dataset generation projects.
