@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
@@ -132,6 +133,65 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {children}
                   </blockquote>
                 ),
+                img: ({ src, alt }) => {
+                  const imgSrc = typeof src === 'string' ? src : '';
+
+                  // Parse size from alt text: "Alt text|size" where size can be:
+                  // - small, medium, large, full (presets)
+                  // - 50%, 75%, etc (percentage)
+                  // - 300px, 500px, etc (pixel width)
+                  let displayAlt = alt || '';
+                  let sizeClass = 'w-full'; // default to full width
+
+                  if (alt && alt.includes('|')) {
+                    const parts = alt.split('|');
+                    displayAlt = parts[0].trim();
+                    const sizeHint = parts[1].trim().toLowerCase();
+
+                    // Preset sizes
+                    const presets: Record<string, string> = {
+                      'small': 'w-1/4',
+                      'medium': 'w-1/2',
+                      'large': 'w-3/4',
+                      'full': 'w-full',
+                      'center': 'w-1/2 mx-auto',
+                    };
+
+                    if (presets[sizeHint]) {
+                      sizeClass = presets[sizeHint];
+                    } else if (sizeHint.endsWith('%')) {
+                      // Percentage: convert to approximate Tailwind class
+                      const pct = parseInt(sizeHint);
+                      if (pct <= 25) sizeClass = 'w-1/4';
+                      else if (pct <= 33) sizeClass = 'w-1/3';
+                      else if (pct <= 50) sizeClass = 'w-1/2';
+                      else if (pct <= 66) sizeClass = 'w-2/3';
+                      else if (pct <= 75) sizeClass = 'w-3/4';
+                      else sizeClass = 'w-full';
+                    } else if (sizeHint.endsWith('px')) {
+                      // Pixel width: use max-width inline style handled below
+                      sizeClass = `max-w-[${sizeHint}]`;
+                    }
+                  }
+
+                  return (
+                    <span className="block my-6">
+                      <Image
+                        src={imgSrc}
+                        alt={displayAlt}
+                        width={800}
+                        height={450}
+                        className={`rounded-lg h-auto ${sizeClass}`}
+                        unoptimized
+                      />
+                      {displayAlt && (
+                        <span className="block text-center text-sm text-muted-foreground mt-2 italic">
+                          {displayAlt}
+                        </span>
+                      )}
+                    </span>
+                  );
+                },
               }}
             >
               {post.content}
