@@ -135,6 +135,17 @@
 }
 
 @layer utilities {
+  /* Blueprint grid pattern */
+  .blueprint-grid {
+    background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .blueprint-grid-dense {
+    background-image: radial-gradient(circle, hsl(var(--border)) 0.5px, transparent 0.5px);
+    background-size: 16px 16px;
+  }
+
   /* Custom scrollbar */
   .custom-scrollbar {
     scrollbar-width: thin;
@@ -252,3 +263,27 @@ html {
 .hljs-number { color: #fb7185 !important; }
 .hljs-function { color: #60a5fa !important; }
 .hljs-variable { color: #fbbf24 !important; }
+
+/* Pipeline flow animation */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes node-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
+  }
+}
+
+.animate-flow-dash {
+  animation: flow-dash 1s linear infinite;
+}
+
+.animate-node-pulse {
+  animation: node-pulse 3s ease-in-out infinite;
+}
