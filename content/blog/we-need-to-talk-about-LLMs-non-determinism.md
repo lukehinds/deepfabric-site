@@ -53,7 +53,7 @@ https://colab.research.google.com/drive/1957dgRwT2tii2V8Ajnve_Dmt4gHjl_Bx?usp=sh
 
 Once you have the notebook open, run the cells one by one (the little play button at the top). The first cell installs the necessary libraries, we then set some fixed seeds, load the model and tokenizer, and finally run the model five times with the same input prompt "The meaning of life is". You should see that the outputs are identical, everytime.
 
-![Deterministic output from LLM|large](/detemined.png)
+![Deterministic output from LLM](/detemined.png)
 
 ## So what does this all mean?
 

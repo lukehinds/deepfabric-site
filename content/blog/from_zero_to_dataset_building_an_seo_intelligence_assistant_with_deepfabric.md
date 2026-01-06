@@ -264,7 +264,7 @@ deepfabric generate --topic-only ./spin-dataforseo.yaml
 
 You'll see the CLI starting to create topics and interacting with the Gemini frontier model. For a 5x5 graph, this took under 5 minutes, resulting in a new file: `dataforseo-topic-graph.jsonl`.
 
-![Topic graph generation|large](/topic-graph-cli.png)
+![Topic graph generation](/topic-graph-cli.png)
 
 This JSON file is a valid Directed Acyclic Graph (DAG). Looking through it, you can see the topics distilled from the frontier model. Examining and refining this topic graph is a whole subject in its own right—we'll cover this in a separate blog post.
 
@@ -352,7 +352,7 @@ deepfabric generate --topics-load ./dataforseo-topics.jsonl ./spin-dataforseo.ya
 
 As the data generates, you can see the ReAct sequence playing out in the streaming preview—this is the conversation taking place with the Gemini LLM as the data is distilled. In the events window, you'll see the calls to the SPIN service happening in real time.
 
-![Dataset generation|large](/dataset-generation-cli.png)
+![Dataset generation](/dataset-generation-cli.png)
 
 With the dataset generated (the 10 samples took about 5 minutes), the dataset is saved to file.
 
