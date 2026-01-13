@@ -60,11 +60,9 @@ export default function RootLayout({
                 api_host: 'https://eu.i.posthog.com',
                 defaults: '2025-11-30',
                 person_profiles: 'identified_only',
-            })
-          `}
-        </Script>
-        <Script id="utm-cleanup" strategy="afterInteractive">
-          {`
+            });
+
+            // Clean up UTM parameters from URL after analytics capture
             (function() {
               var url = new URL(window.location.href);
               var utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id'];
