@@ -63,6 +63,19 @@ export default function RootLayout({
             })
           `}
         </Script>
+        <Script id="utm-cleanup" strategy="afterInteractive">
+          {`
+            (function() {
+              var url = new URL(window.location.href);
+              var utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id'];
+              var hasUtm = utmParams.some(function(p) { return url.searchParams.has(p); });
+              if (hasUtm) {
+                utmParams.forEach(function(p) { url.searchParams.delete(p); });
+                window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+              }
+            })();
+          `}
+        </Script>
       </head>
       <body className={`${inter.className} ${inter.variable} ${plexMono.variable} font-sans antialiased`}>
         <Header />
